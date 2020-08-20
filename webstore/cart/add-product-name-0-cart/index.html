@@ -590,7 +590,8 @@
     
       <div class="alert success">Your order is eligible for complimentary shipping</div>
 	  
-	  
+	  <div id="paypal-button-container"></div>
+
 	  <form action="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" method="post" novalidate="" data-cart-form="">
         <div class="md:flex">
           <div class="flex-auto md:mr-8 lg:mr-16">
@@ -676,8 +677,6 @@
 			</div>
         </form>
 			<div>
-			
-			
 			<br>
 				<span class="mb-2 uppercase">Express checkout options:</span>
 				<br>
@@ -817,7 +816,32 @@ window.bugsnagClient = bugsnag({
 </script>
 
 
-
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" data-sdk-integration-source="button-factory"></script>
+<script>
+  paypal.Buttons({
+      style: {
+          shape: 'rect',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'pay',
+          
+      },
+      createOrder: function(data, actions) {
+          return actions.order.create({
+              purchase_units: [{
+                  amount: {
+                      value: '100'
+                  }
+              }]
+          });
+      },
+      onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+          });
+      }
+  }).render('#paypal-button-container');
+</script>
   
   <script src="/koto/js/runtime-b19032b9111940b0370c48db9492d5c571b207a92780505f255b72ba3c17ad55.js.download"></script>
 <script src="/koto/js/vendor-f144884a02fd19661b46bc16e7f6e9eafbe1cab24e0cd74e01ce0614439e39b6.js.download"></script>
